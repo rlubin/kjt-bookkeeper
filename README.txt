@@ -1,6 +1,5 @@
 kjt-bookkeeper
 
-purpose:
--to allow mom to upload her business accounts csv files from national bank
--to process the files and spit out well organized bookkeeping data from the files
--to make her tax season and business bookkeeping painless
+create a folder on your desktop called kjtbk-files
+download all of your csv files you would like to process
+place the csv files into the kjtbk-files folder

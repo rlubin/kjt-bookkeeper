@@ -1,3 +1,12 @@
 put basic instructions onto interface and simply put a process button
 
-have the processed file appear in the same directory as the other files
+how to i want to process the files?
+    probably smash everything into 2 separate pandas dataframes
+        check the account number, based on the account number analyze in a different way
+        getting an error when putting into df, so i must first go through it via csv save into dictionary then create a df
+    smash each one into its own dataframe
+    separate them based on account number (first line of file)
+    i care about date, description, amount (amounts can be positive(deposited) or negative(withdrawn))
+
+i want to split them up into categories
+and display totals of categories etc
