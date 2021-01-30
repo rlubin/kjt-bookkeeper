@@ -2,11 +2,9 @@ import csv
 import os
 
 files = []
-data = {
-    "Date": [],
-    "Description": [],
-    "Amount": []  # +amount representing a deposit, -amount representing a withdrawal
-}
+data = []  # (date, description, amount)
+categories = []
+groups = {}
 
 
 def getFiles():
@@ -69,9 +67,7 @@ def handleChequingsFile(csv_reader):
             amount = float(row[4])
         description = row[1] + " " + row[2]
         # print(row[0], description, amount)
-        data["Date"].append(row[0])
-        data["Description"].append(description)
-        data["Amount"].append(amount)
+        data.append((row[0], description, amount))
 
 
 def handleCreditFile(csv_reader):
@@ -81,16 +77,75 @@ def handleCreditFile(csv_reader):
     '''
     for row in csv_reader:
         # print(row[0], row[3], row[4])
-        data["Date"].append(row[0])
-        data["Description"].append(row[3])
-        data["Amount"].append(float(row[4]))
+        data.append((row[0], row[3], row[4]))
+
+
+def categorizeData():
+    '''
+    go over data
+    add all unique descriptions to categories
+    '''
+    sorted_data = sorted(data)
+    for entry in sorted_data:
+        if not entry[1] in categories:
+            categories.append(entry[1])
+        # print(entry)
+    # print(data)
+    # print(categories)
+    # print(len(data))
+    # print(len(categories))
+
+
+def createNewGroups():
+    '''
+    create a group for each category
+    add entries from data to category groups
+    need to handle cheques differently
+    '''
+    groups["CHEQUE"] = []
+    for category in categories:
+        if category.find("CHEQUE") != -1:
+            continue
+        groups[category] = []
+    for entry in data:
+        if entry[1].find("CHEQUE") != -1:
+            groups["CHEQUE"].append(entry)
+            continue
+        groups[entry[1]].append(entry)
+    # for key in groups:  # see data
+    #     print(key)
+    #     for value in groups[key]:
+    #         print(value)
+
+
+def calculateIncome():
+    '''
+    calculate revenue, expenses and income
+    '''
+    revenue = 0.0
+    expenses = 0.0
+    for entry in data:
+        amount = float(entry[2])
+        if amount > 0:
+            revenue += amount
+        if amount < 0:
+            expenses += abs(amount)
+    income = revenue - expenses
+    print("revenue", round(revenue, 2))
+    print("expenses", round(expenses, 2))
+    print("income", round(income, 2))
+
+
+def createPDF():
+    '''
+    create PDF
+    '''
+    pass
 
 
 getFiles()
 readFilesIntoData()
-
-# for x in range(0, len(data["Date"])):
-# print(data["Date"][x], data["Description"][x], data["Amount"][x])
-# print(data["Date"][x])
-# print(data["Description"][x])
-# print(data["Amount"][x])
+categorizeData()
+createNewGroups()
+calculateIncome()
+createPDF()
