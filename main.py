@@ -1,10 +1,16 @@
 import csv
 import os
+import csv
 
 files = []
-data = []  # (date, description, amount)
+data = []  # [date, description, amount]
 categories = []
-groups = {}
+groups = {}  # final form of the transaction data
+totals = {
+    "Revenue": 0.0,
+    "Expenses": 0.0,
+    "Income": 0.0
+}  # rev, exp, inc
 
 
 def getFiles():
@@ -55,7 +61,8 @@ def fileType(header):
 def handleChequingsFile(csv_reader):
     '''
     convert chequings account info into data
-    ['Date', 'Description', 'Reference', 'Withdrawals', 'Deposits', 'Balance', 'Issuing transit', 'Counterpart']
+    ['Date', 'Description', 'Reference', 'Withdrawals',
+        'Deposits', 'Balance', 'Issuing transit', 'Counterpart']
     '''
     for row in csv_reader:
         amount = 0.0
@@ -67,17 +74,18 @@ def handleChequingsFile(csv_reader):
             amount = float(row[4])
         description = row[1] + " " + row[2]
         # print(row[0], description, amount)
-        data.append((row[0], description, amount))
+        data.append([row[0], description, amount])
 
 
 def handleCreditFile(csv_reader):
     '''
     convert credit account info into data
-    ['Date', 'Ref.no.', 'Date carried to statement', 'Description', 'Amount', 'Original currency', 'Original amount']
+    ['Date', 'Ref.no.', 'Date carried to statement', 'Description',
+        'Amount', 'Original currency', 'Original amount']
     '''
     for row in csv_reader:
         # print(row[0], row[3], row[4])
-        data.append((row[0], row[3], row[4]))
+        data.append([row[0], row[3], row[4]])
 
 
 def categorizeData():
@@ -131,16 +139,32 @@ def calculateIncome():
         if amount < 0:
             expenses += abs(amount)
     income = revenue - expenses
-    print("revenue", round(revenue, 2))
-    print("expenses", round(expenses, 2))
-    print("income", round(income, 2))
+    totals["Revenue"] = round(revenue, 2)
+    totals["Expenses"] = round(expenses, 2)
+    totals["Income"] = round(income, 2)
+    # print(totals)
+    # print("revenue", round(revenue, 2))
+    # print("expenses", round(expenses, 2))
+    # print("income", round(income, 2))
 
 
-def createPDF():
+def createCSV():
     '''
-    create PDF
+    create CSV
     '''
-    pass
+    desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
+    f = os.path.join(desktop_location, "output.csv")
+    if os.path.exists(f):
+        os.remove(f)
+    with open(f, "w") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["KJT Medicine Prof. Corp."])
+        for total in totals.items():
+            csv_writer.writerow([total[0], total[1]])
+        for key in groups:
+            csv_writer.writerow([key])
+            for value in groups[key]:
+                csv_writer.writerow(value)
 
 
 getFiles()
@@ -148,4 +172,4 @@ readFilesIntoData()
 categorizeData()
 createNewGroups()
 calculateIncome()
-createPDF()
+createCSV()
