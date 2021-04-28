@@ -1,175 +1,88 @@
-import csv
-import os
-import csv
-
-files = []
-data = []  # [date, description, amount]
-categories = []
-groups = {}  # final form of the transaction data
-totals = {
-    "Revenue": 0.0,
-    "Expenses": 0.0,
-    "Income": 0.0
-}  # rev, exp, inc
+import tkinter as tk
+from tkinter import filedialog
+# import utilities as ut
 
 
-def getFiles():
-    '''
-    read csv files in from desktop
-    and store in files
-    '''
-    desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    folder_location = os.path.join(desktop_location, 'kjtbk-files')
-    os.chdir(folder_location)
-    for f in os.listdir():
-        files.append(f)
-    # print(files)
+class App():
+
+    file_paths = []
+
+    def __init__(self):
+        '''
+        window setup
+        '''
+        self.root = tk.Tk()
+        self.root.title("KJT Bookkeeper")
+        self.root.geometry("300x500")
+        self.root.resizable(0, 0)
+
+        self.frame = tk.Frame(self.root)
+        self.frame.pack()
+
+        self.load_button = tk.Button(self.frame, text="Load",
+                                     command=self.loadFiles)
+        self.load_button.pack()
+
+        self.listbox = tk.Listbox(
+            self.frame, selectmode=tk.EXTENDED, width=40)
+        # self.y_scrollbar = tk.Scrollbar(self.listbox)
+        # self.y_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        # self.listbox.config(yscrollcommand=self.y_scrollbar.set)
+        # self.y_scrollbar.config(command=self.listbox.yview)
+        # self.x_scrollbar = tk.Scrollbar(
+        #     self.listbox, orient=tk.HORIZONTAL)
+        # self.x_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
+        # self.listbox.config(xscrollcommand=self.x_scrollbar.set)
+        # self.x_scrollbar.config(command=self.listbox.xview)
+        self.listbox.pack()
+
+        self.del_button = tk.Button(
+            self.frame, text="Delete file(s)", command=self.deleteFiles)
+        self.del_button.pack()
+
+        self.root.mainloop()
+
+    def loadFiles(self):
+        '''
+        allow user to load csv files
+        '''
+        csv_files = filedialog.askopenfiles(
+            initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
+        for csv_file in csv_files:
+            # don't allow duplicate file paths
+            if csv_file.name not in self.file_paths:
+                self.file_paths.append(csv_file.name)
+        self.updateListbox()
+
+    def updateListbox(self):
+        '''
+        clear and update listbox
+        '''
+        # clear listbox
+        self.listbox.delete(0, "end")
+        # populate listbox
+        for file_path in self.file_paths:
+            # just output the file name, not path
+            file_name = file_path[file_path.rfind("/")+1:]
+            self.listbox.insert("end", file_name)
+
+    def deleteFiles(self):
+        '''
+        delete highlighted file(s) from listbox and files
+        '''
+        indexes = self.listbox.curselection()
+        files = []
+        indexes = list(indexes)
+        indexes.reverse()
+        for index in indexes:
+            files.append(self.listbox.get(index))
+        # must delete largest number first then work way down
+        for index in indexes:
+            self.listbox.delete(index)
+        for file_path in self.file_paths:
+            file_name = file_path[file_path.rfind("/")+1:]
+            if file_name in files:
+                self.file_paths.remove(file_path)
 
 
-def readFilesIntoData():
-    '''
-    read files and convert them
-    store relevant info in data
-    '''
-    for f in files:
-        with open(f, newline='') as csvfile:
-            csv_reader = csv.reader(csvfile)
-            next(csv_reader)
-            header = next(csv_reader)
-            # print(header)
-            file_type = fileType(header)
-            # print(file_type)
-            if file_type == "chequings":
-                handleChequingsFile(csv_reader)
-            if file_type == "credit":
-                handleCreditFile(csv_reader)
-
-
-def fileType(header):
-    '''
-    check if file is credit or chequings
-    they are grouped differently
-    '''
-    try:
-        header.index("Description") >= 0 and header.index(
-            "Reference") >= 0
-        return "chequings"
-    except ValueError:
-        return "credit"
-
-
-def handleChequingsFile(csv_reader):
-    '''
-    convert chequings account info into data
-    ['Date', 'Description', 'Reference', 'Withdrawals',
-        'Deposits', 'Balance', 'Issuing transit', 'Counterpart']
-    '''
-    for row in csv_reader:
-        amount = 0.0
-        # print(type(row[3]))
-        # print(type(row[4]))
-        if row[3] != "" and float(row[3]) > 0.0:  # withdrawal
-            amount = "-" + str(float(row[3]))
-        elif row[4] != "" and float(row[4]) > 0.0:  # desposit
-            amount = float(row[4])
-        description = row[1] + " " + row[2]
-        # print(row[0], description, amount)
-        data.append([row[0], description, amount])
-
-
-def handleCreditFile(csv_reader):
-    '''
-    convert credit account info into data
-    ['Date', 'Ref.no.', 'Date carried to statement', 'Description',
-        'Amount', 'Original currency', 'Original amount']
-    '''
-    for row in csv_reader:
-        # print(row[0], row[3], row[4])
-        data.append([row[0], row[3], row[4]])
-
-
-def categorizeData():
-    '''
-    go over data
-    add all unique descriptions to categories
-    '''
-    sorted_data = sorted(data)
-    for entry in sorted_data:
-        if not entry[1] in categories:
-            categories.append(entry[1])
-        # print(entry)
-    # print(data)
-    # print(categories)
-    # print(len(data))
-    # print(len(categories))
-
-
-def createNewGroups():
-    '''
-    create a group for each category
-    add entries from data to category groups
-    need to handle cheques differently
-    '''
-    groups["CHEQUE"] = []
-    for category in categories:
-        if category.find("CHEQUE") != -1:
-            continue
-        groups[category] = []
-    for entry in data:
-        if entry[1].find("CHEQUE") != -1:
-            groups["CHEQUE"].append(entry)
-            continue
-        groups[entry[1]].append(entry)
-    # for key in groups:  # see data
-    #     print(key)
-    #     for value in groups[key]:
-    #         print(value)
-
-
-def calculateIncome():
-    '''
-    calculate revenue, expenses and income
-    '''
-    revenue = 0.0
-    expenses = 0.0
-    for entry in data:
-        amount = float(entry[2])
-        if amount > 0:
-            revenue += amount
-        if amount < 0:
-            expenses += abs(amount)
-    income = revenue - expenses
-    totals["Revenue"] = round(revenue, 2)
-    totals["Expenses"] = round(expenses, 2)
-    totals["Income"] = round(income, 2)
-    # print(totals)
-    # print("revenue", round(revenue, 2))
-    # print("expenses", round(expenses, 2))
-    # print("income", round(income, 2))
-
-
-def createCSV():
-    '''
-    create CSV
-    '''
-    desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    f = os.path.join(desktop_location, "output.csv")
-    if os.path.exists(f):
-        os.remove(f)
-    with open(f, "w") as csvfile:
-        csv_writer = csv.writer(csvfile)
-        csv_writer.writerow(["KJT Medicine Prof. Corp."])
-        for total in totals.items():
-            csv_writer.writerow([total[0], total[1]])
-        for key in groups:
-            csv_writer.writerow([key])
-            for value in groups[key]:
-                csv_writer.writerow(value)
-
-
-getFiles()
-readFilesIntoData()
-categorizeData()
-createNewGroups()
-calculateIncome()
-createCSV()
+app = App()

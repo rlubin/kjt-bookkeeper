@@ -3,6 +3,9 @@ build basic gui
 make executable icon for program
 
 how should i take the files?
-put files into folder
+open app
+load files
+process files
+display output
 
 create csv, then manually convert to pdf

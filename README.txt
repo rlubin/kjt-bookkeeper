@@ -1,5 +1,3 @@
 kjt-bookkeeper
 
-create a folder on your desktop called kjtbk-files
-download all of your csv files you would like to process
-place the csv files into the kjtbk-files folder
+basic bookkeeping app that processes NBC csv files and converts into one easy to read file
