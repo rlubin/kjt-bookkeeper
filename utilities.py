@@ -12,20 +12,6 @@ totals = {
 }  # rev, exp, inc
 
 
-def getFiles():
-    '''
-    read csv files in from desktop
-    and store in files
-    '''
-    desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    folder_location = os.path.join(os.getcwd(), 'kjtbk-files')
-    # folder_location = os.path.join(desktop_location, 'kjtbk-files')
-    os.chdir(folder_location)
-    for f in os.listdir():
-        files.append(f)
-    # print(files)
-
-
 def readFilesIntoData():
     '''
     read files and convert them
@@ -148,16 +134,11 @@ def calculateIncome():
     # print("income", round(income, 2))
 
 
-def createCSV():
+def createCSV(file_path):
     '''
-    create CSV
+    create CSV at specified path
     '''
-    # desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    # f = os.path.join(desktop_location, "output.csv")
-    f = os.path.join(os.getcwd(), "output.csv")
-    if os.path.exists(f):
-        os.remove(f)
-    with open(f, "w") as csvfile:
+    with open(file_path, "w") as csvfile:
         csv_writer = csv.writer(csvfile)
         csv_writer.writerow(["KJT Medicine Prof. Corp."])
         for total in totals.items():
@@ -169,18 +150,21 @@ def createCSV():
 
 
 def processCSVs(file_paths):
+    '''
+    process csv files
+    '''
     for f in file_paths:
         files.append(f)
     readFilesIntoData()
     categorizeData()
     createNewGroups()
     calculateIncome()
-    createCSV()
 
 
-# getFiles()
-# readFilesIntoData()
-# categorizeData()
-# createNewGroups()
-# calculateIncome()
-# createCSV()
+def processAndSaveCSV(file_paths, save_file_path):
+    '''
+    process csv files
+    and save to specified location
+    '''
+    processCSVs(file_paths)
+    createCSV(save_file_path)

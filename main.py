@@ -11,14 +11,19 @@ class App():
         '''
         window setup
         '''
+        # main window setup
         self.root = tk.Tk()
         self.root.title("KJT Bookkeeper")
         self.root.geometry("300x250")
         self.root.minsize(300, 250)
 
+        # listbox setup
         self.listbox_frame = tk.Frame(self.root)
         self.listbox = tk.Listbox(
             self.listbox_frame, selectmode=tk.EXTENDED)
+        self.listbox.bind("<Button-1>", self.delButtonEvent)
+        self.listbox.bind("<ButtonRelease-1>", self.delButtonEvent)
+        self.listbox.bind("<Double-Button-1>", self.delButtonEvent)
         self.y_scrollbar = tk.Scrollbar(self.listbox_frame)
         self.y_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.listbox.config(yscrollcommand=self.y_scrollbar.set)
@@ -31,16 +36,23 @@ class App():
         self.listbox.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
         self.listbox_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
+        # button setup
         self.button_frame = tk.Frame(self.root)
         self.load_button = tk.Button(self.button_frame, text="Load file(s)",
                                      command=self.loadFiles)
         self.load_button.pack(side=tk.TOP, fill=tk.X)
         self.del_button = tk.Button(
-            self.button_frame, text="Delete file(s)", command=self.deleteFiles)
+            self.button_frame, text="Delete file(s)", command=self.deleteFiles, state=tk.DISABLED)
         self.del_button.pack(side=tk.TOP, fill=tk.X)
+        self.desel_button = tk.Button(
+            self.button_frame, text="Deselect file(s)", command=self.deselectFiles, state=tk.DISABLED)
+        self.desel_button.pack(side=tk.TOP, fill=tk.X)
         self.proc_button = tk.Button(
-            self.button_frame, text="Process file(s)", command=self.processFiles)
+            self.button_frame, text="Process file(s)", command=self.processFiles, state=tk.DISABLED)
         self.proc_button.pack(side=tk.TOP, fill=tk.X)
+        self.howto_button = tk.Button(
+            self.button_frame, text="Instructions", command=self.instructions)
+        self.howto_button.pack(side=tk.TOP, fill=tk.X)
         self.button_frame.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.root.mainloop()
@@ -56,12 +68,6 @@ class App():
             # don't allow duplicate file paths
             if csv_file.name not in self.file_paths:
                 self.file_paths.append(csv_file.name)
-        self.updateListbox()
-
-    def updateListbox(self):
-        '''
-        clear and update listbox
-        '''
         # clear listbox
         self.listbox.delete(0, "end")
         # populate listbox
@@ -69,6 +75,9 @@ class App():
             # just output the file name, not path
             file_name = file_path[file_path.rfind("/")+1:]
             self.listbox.insert("end", file_name)
+        # update button state
+        if self.listbox.size() > 0:
+            self.proc_button["state"] = tk.NORMAL
 
     def deleteFiles(self):
         '''
@@ -92,12 +101,67 @@ class App():
         to_del.reverse()
         for i in to_del:
             self.file_paths.pop(i)
+        # update button states
+        self.del_button["state"] = tk.DISABLED
+        if self.listbox.size() == 0:
+            self.proc_button["state"] = tk.DISABLED
 
     def processFiles(self):
         '''
-        process the selected files
+        process files and save document
         '''
-        ut.processCSVs(self.file_paths)
+        save_file = filedialog.asksaveasfile(
+            initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
+        save_file_path = save_file.name
+        ut.processAndSaveCSV(self.file_paths, save_file_path)
+
+    def instructions(self):
+        '''
+        explain how to use the app
+        '''
+        # new toplevel window setup
+        insturctions = tk.Toplevel()
+        insturctions.title("Instructions")
+        insturctions.geometry("325x200")
+        insturctions.resizable(0, 0)
+
+        # label setup
+        title_label = tk.Label(insturctions, text="Instructions")
+        title_label.pack(side=tk.TOP)
+        load_label = tk.Label(
+            insturctions, text="Load file(s):\nAllows you to upload NBC CSV files", anchor=tk.W, justify=tk.LEFT)
+        load_label.pack(expand=True, fill=tk.X)
+        del_label = tk.Label(
+            insturctions, text="Delete file(s):\nAllows you to delete highlighted files that have been loaded", anchor=tk.W, justify=tk.LEFT)
+        del_label.pack(expand=True, fill=tk.X)
+        desel_label = tk.Label(
+            insturctions, text="Deselect file(s):\nAllows you to deselect highlighted files", anchor=tk.W, justify=tk.LEFT)
+        desel_label.pack(expand=True, fill=tk.X)
+        proc_label = tk.Label(
+            insturctions, text="Process file(s):\nProcesses files and choose where to save it", anchor=tk.W, justify=tk.LEFT)
+        proc_label.pack(expand=True, fill=tk.X)
+
+    def deselectFiles(self):
+        '''
+        clears listbox selection
+        '''
+        self.listbox.selection_clear(0, tk.END)
+        self.del_button["state"] = tk.DISABLED
+        self.desel_button["state"] = tk.DISABLED
+
+    def delButtonEvent(self, event):
+        '''
+        control state of delete and deselect file(s)
+        '''
+        if self.listbox.size() == 0:
+            self.del_button["state"] = tk.DISABLED
+            self.desel_button["state"] = tk.DISABLED
+        elif len(self.listbox.curselection()) > 0:
+            self.del_button["state"] = tk.NORMAL
+            self.desel_button["state"] = tk.NORMAL
+        else:
+            self.del_button["state"] = tk.DISABLED
+            self.desel_button["state"] = tk.DISABLED
 
 
 app = App()
