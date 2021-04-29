@@ -1,4 +1,3 @@
-import csv
 import os
 import csv
 
@@ -19,7 +18,8 @@ def getFiles():
     and store in files
     '''
     desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    folder_location = os.path.join(desktop_location, 'kjtbk-files')
+    folder_location = os.path.join(os.getcwd(), 'kjtbk-files')
+    # folder_location = os.path.join(desktop_location, 'kjtbk-files')
     os.chdir(folder_location)
     for f in os.listdir():
         files.append(f)
@@ -152,8 +152,9 @@ def createCSV():
     '''
     create CSV
     '''
-    desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
-    f = os.path.join(desktop_location, "output.csv")
+    # desktop_location = os.path.join(os.environ['HOMEPATH'], 'Desktop')
+    # f = os.path.join(desktop_location, "output.csv")
+    f = os.path.join(os.getcwd(), "output.csv")
     if os.path.exists(f):
         os.remove(f)
     with open(f, "w") as csvfile:
@@ -167,9 +168,19 @@ def createCSV():
                 csv_writer.writerow(value)
 
 
-getFiles()
-readFilesIntoData()
-categorizeData()
-createNewGroups()
-calculateIncome()
-createCSV()
+def processCSVs(file_paths):
+    for f in file_paths:
+        files.append(f)
+    readFilesIntoData()
+    categorizeData()
+    createNewGroups()
+    calculateIncome()
+    createCSV()
+
+
+# getFiles()
+# readFilesIntoData()
+# categorizeData()
+# createNewGroups()
+# calculateIncome()
+# createCSV()

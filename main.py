@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import filedialog
-# import utilities as ut
+import utilities as ut
 
 
 class App():
@@ -15,7 +15,6 @@ class App():
         self.root.title("KJT Bookkeeper")
         self.root.geometry("300x250")
         self.root.minsize(300, 250)
-        # self.root.resizable(0, 0)
 
         self.listbox_frame = tk.Frame(self.root)
         self.listbox = tk.Listbox(
@@ -96,9 +95,9 @@ class App():
 
     def processFiles(self):
         '''
-
+        process the selected files
         '''
-        pass
+        ut.processCSVs(self.file_paths)
 
 
 app = App()
