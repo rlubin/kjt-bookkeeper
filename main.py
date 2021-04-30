@@ -111,7 +111,8 @@ class App():
         process files and save document
         '''
         save_file = filedialog.asksaveasfile(
-            initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
+            initialdir="/", title="Save file", defaultextension=("Text files", "*.txt"), filetypes=(("Text files", "*.txt"),))
+        # initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
         save_file_path = save_file.name
         ut.processAndSaveCSV(self.file_paths, save_file_path)
 
