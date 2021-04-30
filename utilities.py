@@ -1,5 +1,7 @@
 import os
 import csv
+import pandas as pd
+import numpy as np
 
 files = []
 data = []  # [date, description, amount]
@@ -168,3 +170,70 @@ def processAndSaveCSV(file_paths, save_file_path):
     '''
     processCSVs(file_paths)
     createCSV(save_file_path)
+
+
+def test():
+    # create a massive dataframe from all of the files
+    # date description amount
+
+    fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
+                           "20200906160739.csv")
+    fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
+                           "20200906161139.csv")
+
+    files = [fp_acc1, fp_acc2]
+    dfs = []
+
+    for f in files:
+        dfs.append(pd.read_csv(f, skiprows=1, error_bad_lines=False))
+
+    data = pd.DataFrame()
+
+    # create big df of all data
+    for df in dfs:
+        data = pd.concat([data, df], ignore_index=True)
+
+    keep_cols = ["Date", "Description", "Reference",
+                 "Withdrawals", "Deposits", "Amount"]
+
+    # shrink columns of data to keep_cols
+    for col in data.columns:
+        if col not in keep_cols:
+            del data[col]
+
+    data.to_csv("./kjtbk-files/temp.csv")
+
+    # combine description and reference into description
+    data["Temp1"] = np.nan
+    # print(data["Description"])
+    # print(data["Reference"])
+    data["Temp1"] = data["Description"] + \
+        " " + data["Reference"].fillna("")
+    data["Temp1"] = data["Temp1"].str.strip()
+    del data["Description"]
+    del data["Reference"]
+    # later column names
+    new_columns = data.columns.values
+    new_columns[4] = "Description"
+    data.columns = new_columns
+
+    # combine withdrawals and deposits and amount into amount
+    data["Temp2"] = np.nan
+    # print(data["Withdrawals"])
+    # print(data["Deposits"])
+    # print(data["Amount"])
+    data["Temp2"] = -data["Withdrawals"].fillna(
+        0) + data["Deposits"].fillna(0) + data["Amount"].fillna(0)
+    del data["Withdrawals"]
+    del data["Deposits"]
+    del data["Amount"]
+    # later column names
+    new_columns = data.columns.values
+    new_columns[2] = "Amount"
+    data.columns = new_columns
+
+    print(data)
+    data.to_csv("./kjtbk-files/data.csv")
+
+
+test()
