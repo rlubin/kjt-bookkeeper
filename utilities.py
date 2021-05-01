@@ -1,6 +1,28 @@
-import os
+# import os
 import pandas as pd
 import numpy as np
+
+
+def isBadFile(file_path):
+    '''
+    check if incompatible files were uploaded
+    '''
+    df = pd.read_csv(file_path, skiprows=1, error_bad_lines=False)
+    if df.empty():
+        return True
+
+    credit_account = ["Date", "Ref.no.", "Date carried to statement",
+                      "Description", "Amount", "Original currency", "Original amount"]
+    business_account = ["Date", "Description", "Reference", "Withdrawals",
+                        "Deposits", "Balance", "Issuing transit", "Counterpart"]
+
+    print(type(df.columns.values))
+    print(df.columns.values)
+
+    for col in df.columns.values:
+        if col not in accepted_columns:
+            return True
+    return False
 
 
 def fileTypes(columns):
@@ -281,7 +303,7 @@ def processAndSave(file_paths, save_file_path):
     #     print(df_categories[x])
     #     print()
 
-    # create document to present data cleanly
+    # create and save document
     with open(save_file_path, mode="w") as f:
         f.write("Revenue: {:.2f}\n".format(revenue))
         f.write("Expenses: {:.2f}\n".format(expenses))
@@ -294,28 +316,28 @@ def processAndSave(file_paths, save_file_path):
                                                       ) + "\t" + str(row["Amount"]) + "\n")
 
 
-# business
-fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20200906160739.csv")
-# credit
-fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20200906161139.csv")
-# business
-fp_acc3 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20210430193744.csv")
-# credit
-fp_acc4 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20210430193830.csv")
+# # business
+# fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20200906160739.csv")
+# # credit
+# fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20200906161139.csv")
+# # business
+# fp_acc3 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20210430193744.csv")
+# # credit
+# fp_acc4 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20210430193830.csv")
 
-# files = [fp_acc1]
-# files = [fp_acc2]
-# files = [fp_acc1, fp_acc2]
-# files = [fp_acc2, fp_acc1]
-# files = [fp_acc3]
-files = [fp_acc4]
-# files = [fp_acc3, fp_acc4]
-# files = [fp_acc1, fp_acc2, fp_acc3, fp_acc4]
+# # files = [fp_acc1]
+# # files = [fp_acc2]
+# # files = [fp_acc1, fp_acc2]
+# # files = [fp_acc2, fp_acc1]
+# # files = [fp_acc3]
+# files = [fp_acc4]
+# # files = [fp_acc3, fp_acc4]
+# # files = [fp_acc1, fp_acc2, fp_acc3, fp_acc4]
 
-save = os.path.join(os.getcwd(), "kjtbk-files", "t.txt")
+# save = os.path.join(os.getcwd(), "kjtbk-files", "t.txt")
 
-processAndSave(files, save)
+# processAndSave(files, save)

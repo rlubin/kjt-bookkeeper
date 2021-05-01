@@ -68,6 +68,15 @@ class App():
             # don't allow duplicate file paths
             if csv_file.name not in self.file_paths:
                 self.file_paths.append(csv_file.name)
+        # print(self.file_paths)
+        # check for bad files and remove them
+        # bad_files = []
+        # for x in range(len(self.file_paths)):
+        #     if ut.isBadFile(self.file_paths[x]):
+        #         bad_files.append(x)
+        # bad_files.reverse()
+        # for x in bad_files:
+        #     del self.file_paths[x]
         # clear listbox
         self.listbox.delete(0, "end")
         # populate listbox
