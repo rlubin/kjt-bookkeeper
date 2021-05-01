@@ -1,3 +1,6 @@
 pyinstaller -w -F -n kjt-bookkeeper main.py
 
 only works properly when both accounts csv's are included
+get it working so that it works with either or both
+
+print error messages with alert boxes

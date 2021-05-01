@@ -1,88 +1,163 @@
+import os
 import pandas as pd
 import numpy as np
 
 
-def processAndSaveCSV(file_paths, save_file_path):
+def fileTypes(columns):
     '''
-    process csv files
-    and save to specified location
+    based on columns figure out file types included
     '''
-    # create a massive dataframe from all of the files
-    # date description amount
+    credit_account = ["Date", "Ref.no.", "Date carried to statement",
+                      "Description", "Amount", "Original currency", "Original amount"]
+    business_account = ["Date", "Description", "Reference", "Withdrawals",
+                        "Deposits", "Balance", "Issuing transit", "Counterpart"]
 
-    files = []
-    for fp in file_paths:
-        files.append(fp)
+    credit = True
+    business = True
 
-    # fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
-    #                        "20200906160739.csv")
-    # fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
-    #                        "20200906161139.csv")
+    for cat in credit_account:
+        if cat not in columns:
+            credit = False
 
-    # files = [fp_acc1, fp_acc2]
-    dfs = []
+    for cat in business_account:
+        if cat not in columns:
+            business = False
 
-    for f in files:
-        dfs.append(pd.read_csv(f, skiprows=1, error_bad_lines=False))
+    if credit and business:
+        return "both"
+    elif credit:
+        return "credit"
+    elif business:
+        return "business"
 
-    data = pd.DataFrame()
 
-    # create big df of all data
-    for df in dfs:
-        data = pd.concat([data, df], ignore_index=True)
-
-    keep_cols = ["Date", "Description", "Reference",
-                 "Withdrawals", "Deposits", "Amount"]
+def pruneColumns(dataframe, file_types):
+    '''
+    remove unneeded columns based on file_types
+    '''
+    keep_cols = []
+    if file_types == "both":
+        keep_cols = ["Date", "Description", "Reference",
+                     "Withdrawals", "Deposits", "Amount"]
+    elif file_types == "credit":
+        keep_cols = ["Date", "Description", "Amount"]
+    elif file_types == "business":
+        keep_cols = ["Date", "Description", "Reference",
+                     "Withdrawals", "Deposits"]
 
     # shrink columns of data to keep_cols
-    for col in data.columns:
+    for col in dataframe.columns:
         if col not in keep_cols:
-            del data[col]
+            del dataframe[col]
 
-    # data.to_csv("./kjtbk-files/temp.csv")
 
-    # combine description and reference into description
-    data["Temp1"] = np.nan
-    # print(data["Description"])
-    # print(data["Reference"])
-    data["Temp1"] = data["Description"] + \
-        " " + data["Reference"].fillna("")
-    data["Temp1"] = data["Temp1"].str.strip()
-    del data["Description"]
-    del data["Reference"]
-    # later column names
-    new_columns = data.columns.values
-    new_columns[4] = "Description"
-    data.columns = new_columns
+def combineColumns(df, file_types):
+    '''
+    combine columns
+    '''
+    if file_types == "both":
+        # combine description and reference into description
+        df["Temp1"] = np.nan
+        # print(df["Description"])
+        # print(df["Reference"])
+        df["Temp1"] = df["Description"] + \
+            " " + df["Reference"].fillna("")
+        df["Temp1"] = df["Temp1"].str.strip()
+        del df["Description"]
+        del df["Reference"]
+        # later column names
+        new_columns = df.columns.values
+        # these wont work for dataframes that arent both account csvs
+        # print(type(new_columns))
+        # print(new_columns)
+        index = np.where(new_columns == "Temp1")
+        # print(index[0])
+        # find column index that is equal to Description then use it to change
+        new_columns[index[0]] = "Description"
+        df.columns = new_columns
 
-    # combine withdrawals and deposits and amount into amount
-    data["Temp2"] = np.nan
-    # print(data["Withdrawals"])
-    # print(data["Deposits"])
-    # print(data["Amount"])
-    data["Temp2"] = -data["Withdrawals"].fillna(
-        0) + data["Deposits"].fillna(0) + data["Amount"].fillna(0)
-    del data["Withdrawals"]
-    del data["Deposits"]
-    del data["Amount"]
-    # later column names
-    new_columns = data.columns.values
-    new_columns[2] = "Amount"
-    data.columns = new_columns
+        # combine withdrawals and deposits and amount into amount
+        df["Temp2"] = np.nan
+        # print(df["Withdrawals"])
+        # print(df["Deposits"])
+        # print(df["Amount"])
+        df["Temp2"] = -df["Withdrawals"].fillna(
+            0) + df["Deposits"].fillna(0) + df["Amount"].fillna(0)
+        del df["Withdrawals"]
+        del df["Deposits"]
+        del df["Amount"]
+        # later column names
+        new_columns = df.columns.values
+        # these wont work for dataframes that arent both account csvs
+        # print(type(new_columns))
+        # print(new_columns)
+        index = np.where(new_columns == "Temp2")
+        # print(index[0])
+        # find column index that is equal to Amount then use it to change
+        new_columns[index[0]] = "Amount"
+        df.columns = new_columns
+    elif file_types == "credit":
+        pass
+    elif file_types == "business":
+        # combine description and reference into description
+        df["Temp1"] = np.nan
+        # print(df["Description"])
+        # print(df["Reference"])
+        df["Temp1"] = df["Description"] + \
+            " " + df["Reference"].fillna("")
+        df["Temp1"] = df["Temp1"].str.strip()
+        del df["Description"]
+        del df["Reference"]
+        # later column names
+        new_columns = df.columns.values
+        # these wont work for dataframes that arent both account csvs
+        # print(type(new_columns))
+        # print(new_columns)
+        index = np.where(new_columns == "Temp1")
+        # print(index[0])
+        # find column index that is equal to Description then use it to change
+        new_columns[index[0]] = "Description"
+        df.columns = new_columns
 
-    # order data by date
-    data = data.sort_values(by="Date")
+        # combine withdrawals and deposits and amount into amount
+        df["Temp2"] = np.nan
+        # print(df["Withdrawals"])
+        # print(df["Deposits"])
+        # print(df["Amount"])
+        df["Temp2"] = -df["Withdrawals"].fillna(
+            0) + df["Deposits"].fillna(0)
+        del df["Withdrawals"]
+        del df["Deposits"]
+        # later column names
+        new_columns = df.columns.values
+        # these wont work for dataframes that arent both account csvs
+        # print(type(new_columns))
+        # print(new_columns)
+        index = np.where(new_columns == "Temp2")
+        # print(index[0])
+        # find column index that is equal to Amount then use it to change
+        new_columns[index[0]] = "Amount"
+        df.columns = new_columns
 
-    # data.to_csv("./kjtbk-files/temp.csv")
 
-    # if rows where amount is 0
-    data = data[(data[["Amount"]] != 0).all(axis=1)]
+def filter_cheques(description):
+    '''
+    used to filter cheques from data
+    '''
+    chq = "CHEQUE"
+    if chq in str(description):
+        return False
+    else:
+        return True
 
-    # print(data)
-    # data.to_csv("./kjtbk-files/data.csv")
 
+def splitIntoCategories(df, file_types):
+    '''
+    split dataframe into smaller dfs based on description
+    return categories and df_categories
+    '''
     # split data into sub dataframe for like descriptions
-    descriptions = data["Description"].values
+    descriptions = df["Description"].values
     # print(len(descriptions))
     # print(descriptions)
     unique_descriptions = []
@@ -96,45 +171,96 @@ def processAndSaveCSV(file_paths, save_file_path):
 
     # create group that the data will be split into
     # group all cheques
-    def filter_cheques(description):
-        chq = "CHEQUE"
-        if chq in str(description):
-            return False
-        else:
-            return True
-    categories = filter(filter_cheques, unique_descriptions)
+    categories = None
+    if file_types == "buiness" or file_types == "both":
+        categories = filter(filter_cheques, unique_descriptions)
+        categories = list(categories)
+        categories.append("CHEQUES")
+    else:
+        categories = unique_descriptions
+        categories = list(categories)
+    categories.append("OTHER")
     # print(type(categories))
     categories = list(categories)
     # print(categories)
     # print(len(categories))
-    categories.append("CHEQUES")
-    categories.append("OTHER")
-    categories.remove(np.nan)
+
+    # if NaN values exist, remove them from dataframe
+    if df.isnull().values.any():
+        categories.remove(np.nan)
+
     # for cat in categories:
     # print(type(cat))
     # print(cat)
 
-    # split data into categories
-    # print(len(data))
-    data = data.fillna("OTHER")
+    # split df into categories
+    # print(len(df))
+    df = df.fillna("OTHER")
     df_categories = []
     for cat in categories:
         # print(cat)
         if cat == "CHEQUES":
-            # print(data.loc[data["Description"].str.contains("CHEQUE")])
+            # print(df.loc[df["Description"].str.contains("CHEQUE")])
             df_categories.append(pd.DataFrame(
-                data.loc[data["Description"].str.contains("CHEQUE")]))
+                df.loc[df["Description"].str.contains("CHEQUE")]))
         else:
-            # print(data.loc[data["Description"] == cat])
+            # print(df.loc[df["Description"] == cat])
             df_categories.append(pd.DataFrame(
-                data.loc[data["Description"] == cat]))
+                df.loc[df["Description"] == cat]))
+
+    return categories, df_categories
+
+
+def processAndSave(file_paths, save_file_path):
+    '''
+    process csv files
+    and save to specified location
+    '''
+    # create a massive dataframe from all of the files
+    # date description amount
+
+    files = []
+    for fp in file_paths:
+        files.append(fp)
+
+    dfs = []
+
+    for f in files:
+        dfs.append(pd.read_csv(f, skiprows=1, error_bad_lines=False))
+
+    data = pd.DataFrame()
+
+    # create big df of all data
+    for df in dfs:
+        data = pd.concat([data, df], ignore_index=True)
+
+    # figure out what files have been included
+    file_types = fileTypes(data.columns)
+
+    # remove unnessecary file
+    pruneColumns(data, file_types)
+
+    # combine columns in correct way
+    combineColumns(data, file_types)
+
+    # order data by date
+    data = data.sort_values(by="Date")
+
+    # remove rows where amount is 0
+    data = data[(data[["Amount"]] != 0).all(axis=1)]
+    # print(data)
+
+    # split into different categories
+    categories, df_categories = splitIntoCategories(data, file_types)
+    # print(df_categories)
 
     # size = 0
     # for x in range(len(df_categories)):
-        # print(categories[x])
-        # print(df_categories[x])
-        # print(len(df))
-        # size += len(df)
+    #     print(type(categories[x]))
+    #     print(categories[x])
+    #     print(df_categories[x])
+    # print(len(df))
+    # size += len(df)
     # print(size)
 
     # calculate revenue, expenses and income
@@ -166,3 +292,30 @@ def processAndSaveCSV(file_paths, save_file_path):
             for index, row in df_categories[x].iterrows():
                 f.write(str(row["Date"]) + "\t" + str(row["Description"]
                                                       ) + "\t" + str(row["Amount"]) + "\n")
+
+
+# business
+fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20200906160739.csv")
+# credit
+fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20200906161139.csv")
+# business
+fp_acc3 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20210430193744.csv")
+# credit
+fp_acc4 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20210430193830.csv")
+
+# files = [fp_acc1]
+# files = [fp_acc2]
+# files = [fp_acc1, fp_acc2]
+# files = [fp_acc2, fp_acc1]
+# files = [fp_acc3]
+files = [fp_acc4]
+# files = [fp_acc3, fp_acc4]
+# files = [fp_acc1, fp_acc2, fp_acc3, fp_acc4]
+
+save = os.path.join(os.getcwd(), "kjtbk-files", "t.txt")
+
+processAndSave(files, save)

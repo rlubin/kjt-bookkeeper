@@ -62,8 +62,8 @@ class App():
         allow user to load csv files
         '''
         csv_files = filedialog.askopenfiles(
-            # initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
-            initialdir="C:/Users\Ryan/Google Drive/Software/In Progress/kjt-bookkeeper/kjtbk-files", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
+            initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
+        # initialdir="C:/Users\Ryan/Google Drive/Software/In Progress/kjt-bookkeeper/kjtbk-files", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
         for csv_file in csv_files:
             # don't allow duplicate file paths
             if csv_file.name not in self.file_paths:
@@ -114,7 +114,7 @@ class App():
             initialdir="/", title="Save file", defaultextension=("Text files", "*.txt"), filetypes=(("Text files", "*.txt"),))
         # initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
         save_file_path = save_file.name
-        ut.processAndSaveCSV(self.file_paths, save_file_path)
+        ut.processAndSave(self.file_paths, save_file_path)
 
     def instructions(self):
         '''
