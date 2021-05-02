@@ -217,7 +217,10 @@ def splitIntoCategories(df, file_types):
 
     # split df into categories
     # print(len(df))
+
+    # fill NaN's in dataframe with OTHER (should be for description)
     df = df.fillna("OTHER")
+
     df_categories = []
     for cat in categories:
         # print(cat)
@@ -271,6 +274,9 @@ def processAndSave(file_paths, save_file_path):
     # remove rows where amount is 0
     data = data[(data[["Amount"]] != 0).all(axis=1)]
     # print(data)
+
+    # remove df entries where description column contains word points
+    data = data[data["Description"].str.contains("POINTS") == False]
 
     # split into different categories
     categories, df_categories = splitIntoCategories(data, file_types)
@@ -328,6 +334,11 @@ def processAndSave(file_paths, save_file_path):
 # # credit
 # fp_acc4 = os.path.join(os.getcwd(), "kjtbk-files",
 #                        "20210430193830.csv")
+
+# fp_acc5 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "POINTS_TEST.csv")
+
+# files = [fp_acc5]
 
 # # files = [fp_acc1]
 # # files = [fp_acc2]
