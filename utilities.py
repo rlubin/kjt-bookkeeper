@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import subprocess
+import csv
 
 # not currently in use
 def isBadFile(file_path):
@@ -312,31 +313,28 @@ def processAndSave(file_paths):
     # data = data.sort_values(by=["Description", "Date"])
 
     # add revenue, expenses and income rows
-    totals_list = [['', 'Revenue', '{:.2f}'.format(revenue)],
+    totals = [['', 'Revenue', '{:.2f}'.format(revenue)],
     ['', 'Expenses', '{:.2f}'.format(expenses)],
     ['', 'Income', '{:.2f}'.format(income)]]
 
-    totals = pd.DataFrame(totals_list, columns=['Date', 'Description', 'Amount'])
+    # totals = pd.DataFrame(totals_list, columns=['Date', 'Description', 'Amount'])
 
-    # print(totals)
+    # data.to_csv(file_path, index=False)
 
-    df = pd.DataFrame()
-    # print(type(df))
+    # build and save csv
+    with open(file_path, 'w', newline='') as f:
+        writer = csv.writer(f)
 
-    # for x in range(len(categories)):
-        # print(categories[x])
-        # print(df_categories[x])
-        # df.append(categories[x])
-        # df.append(df_categories[x])
+        writer.writerows(totals)
+        writer.writerow({})
 
-    # print(df)
+        for x in range(len(categories)):
+            cat_total = df_categories[x].sum(axis=1).sum()
+            writer.writerow({'', categories[x]})
+            writer.writerows(df_categories[x].values.tolist())
+            writer.writerow({})
 
-
-    # final = pd.concat([totals, data])
-
-    data.to_csv(file_path, index=False)
-
-    print(file_path)
+    # print(file_path)
 
     subprocess.Popen(f'explorer /select, "{file_path}"')
 
