@@ -237,6 +237,10 @@ def splitIntoCategories(df, file_types):
 
     return categories, df_categories
 
+# basic callback functionality
+# def callBack(function1, function2):
+#     function1()
+#     function2()
 
 # def processAndSave(file_paths, save_file_path):
 def processAndSave(file_paths):
@@ -283,80 +287,69 @@ def processAndSave(file_paths):
 
     # split into different categories
     categories, df_categories = splitIntoCategories(data, file_types)
-    # print(df_categories)
 
-    # size = 0
-    # for x in range(len(df_categories)):
-    #     print(type(categories[x]))
+    # for x in range(len(categories)):
     #     print(categories[x])
     #     print(df_categories[x])
-    # print(len(df))
-    # size += len(df)
-    # print(size)
 
     # calculate revenue, expenses and income
-    # print(data.loc[data["Amount"] > 0])
-    # print(data.loc[data["Amount"] < 0])
     revenue = data.loc[data["Amount"] > 0]["Amount"].sum()
     expenses = data.loc[data["Amount"] < 0]["Amount"].sum()
     income = revenue + expenses
-    # print("Revenue: {:.2f}".format(revenue))
-    # print("Expenses: {:.2f}".format(expenses))
-    # print("Income: {:.2f}".format(income))
-    # print()
-
-    # calculate cost or gain of each category
-    # for x in range(len(df_categories)):
-    #     amount = df_categories[x]["Amount"].sum()
-    #     print(categories[x] + ": {:.2f}".format(amount))
-    #     print(df_categories[x])
-    #     print()
-
-    # create and save document
-    # with open(save_file_path, mode="w") as f:
-    #     f.write("Revenue: {:.2f}\n".format(revenue))
-    #     f.write("Expenses: {:.2f}\n".format(expenses))
-    #     f.write("Income: {:.2f}\n".format(income))
-    #     for x in range(len(df_categories)):
-    #         amount = df_categories[x]["Amount"].sum()
-    #         f.write("\n" + categories[x] + ": {:.2f}".format(amount) + "\n")
-    #         for index, row in df_categories[x].iterrows():
-    #             f.write(str(row["Date"]) + "\t" + str(row["Description"]
-    #                                                   ) + "\t" + str(row["Amount"]) + "\n")
 
     date = datetime.date.today().strftime('%Y-%m-%d')
-    file_name = f'kjt-report-{date}.txt'
+    ext = 'csv'
+    file_name = f'kjt-report-{date}.{ext}'
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
     file_path = os.path.join(desktop, file_name)
     file_duplication_number = 1
 
     while os.path.isfile(file_path):
-        file_name = f'kjt-report-{date}({file_duplication_number}).txt'
+        file_name = f'kjt-report-{date}({file_duplication_number}).{ext}'
         file_path = os.path.join(desktop, file_name)
         file_duplication_number += 1
-        
+    
+    # data = data.sort_values(by=["Description", "Date"])
+
+    # add revenue, expenses and income rows
+    totals_list = [['', 'Revenue', '{:.2f}'.format(revenue)],
+    ['', 'Expenses', '{:.2f}'.format(expenses)],
+    ['', 'Income', '{:.2f}'.format(income)]]
+
+    totals = pd.DataFrame(totals_list, columns=['Date', 'Description', 'Amount'])
+
+    # print(totals)
+
+    df = pd.DataFrame()
+    # print(type(df))
+
+    # for x in range(len(categories)):
+        # print(categories[x])
+        # print(df_categories[x])
+        # df.append(categories[x])
+        # df.append(df_categories[x])
+
+    # print(df)
+
+
+    # final = pd.concat([totals, data])
+
+    data.to_csv(file_path, index=False)
+
     print(file_path)
 
-    with open(file_path, mode="w") as f:
-        f.write("Revenue: {:.2f}\n".format(revenue))
-        f.write("Expenses: {:.2f}\n".format(expenses))
-        f.write("Income: {:.2f}\n".format(income))
-        for x in range(len(df_categories)):
-            amount = df_categories[x]["Amount"].sum()
-            f.write("\n" + categories[x] + ": {:.2f}".format(amount) + "\n")
-            for index, row in df_categories[x].iterrows():
-                f.write(str(row["Date"]) + "\t" + str(row["Description"]
-                                                      ) + "\t" + str(row["Amount"]) + "\n")
+    subprocess.Popen(f'explorer /select, "{file_path}"')
 
-    # subprocess.Popen(f'exploer /select, "{file_path}"')
+    # callBack(data.to_csv(file_path, index=False), subprocess.Popen(f'exploer /select, "{file_path}"'))
+
 
 
 # # business
-# fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
-#                        "20200906160739.csv")
+fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20200906160739.csv")
 # # credit
-# fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
-#                        "20200906161139.csv")
+fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
+                       "20200906161139.csv")
 # # business
 # fp_acc3 = os.path.join(os.getcwd(), "kjtbk-files",
 #                        "20210430193744.csv")
@@ -371,7 +364,7 @@ def processAndSave(file_paths):
 
 # # files = [fp_acc1]
 # # files = [fp_acc2]
-# # files = [fp_acc1, fp_acc2]
+files = [fp_acc1, fp_acc2]
 # # files = [fp_acc2, fp_acc1]
 # # files = [fp_acc3]
 # files = [fp_acc4]
@@ -381,3 +374,5 @@ def processAndSave(file_paths):
 # save = os.path.join(os.getcwd(), "kjtbk-files", "t.txt")
 
 # processAndSave(files, save)
+
+processAndSave(files)
