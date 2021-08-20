@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import datetime
+import subprocess
 
 # not currently in use
 def isBadFile(file_path):
@@ -327,6 +328,14 @@ def processAndSave(file_paths):
     file_name = f'kjt-report-{date}.txt'
     desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
     file_path = os.path.join(desktop, file_name)
+    file_duplication_number = 1
+
+    while os.path.isfile(file_path):
+        file_name = f'kjt-report-{date}({file_duplication_number}).txt'
+        file_path = os.path.join(desktop, file_name)
+        file_duplication_number += 1
+        
+    print(file_path)
 
     with open(file_path, mode="w") as f:
         f.write("Revenue: {:.2f}\n".format(revenue))
@@ -338,6 +347,8 @@ def processAndSave(file_paths):
             for index, row in df_categories[x].iterrows():
                 f.write(str(row["Date"]) + "\t" + str(row["Description"]
                                                       ) + "\t" + str(row["Amount"]) + "\n")
+
+    # subprocess.Popen(f'exploer /select, "{file_path}"')
 
 
 # # business
