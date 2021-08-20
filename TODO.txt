@@ -6,6 +6,3 @@ add checking on loaded files
 break into functions with a single responsiblity
 
 remove commented code
-
-BUG
-when building csv, sometimes the cat name and cat total are in reverse order??? WTF???
