@@ -346,11 +346,11 @@ def processAndSave(file_paths):
 
 
 # # business
-fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20200906160739.csv")
+# fp_acc1 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20200906160739.csv")
 # # credit
-fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
-                       "20200906161139.csv")
+# fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
+#                        "20200906161139.csv")
 # # business
 # fp_acc3 = os.path.join(os.getcwd(), "kjtbk-files",
 #                        "20210430193744.csv")
@@ -365,7 +365,7 @@ fp_acc2 = os.path.join(os.getcwd(), "kjtbk-files",
 
 # # files = [fp_acc1]
 # # files = [fp_acc2]
-files = [fp_acc1, fp_acc2]
+# files = [fp_acc1, fp_acc2]
 # # files = [fp_acc2, fp_acc1]
 # # files = [fp_acc3]
 # files = [fp_acc4]
@@ -376,4 +376,4 @@ files = [fp_acc1, fp_acc2]
 
 # processAndSave(files, save)
 
-processAndSave(files)
+# processAndSave(files)
