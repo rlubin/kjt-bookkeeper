@@ -328,9 +328,12 @@ def processAndSave(file_paths):
         writer.writerows(totals)
         writer.writerow({})
 
+        cat_totals = []
         for x in range(len(categories)):
-            cat_total = df_categories[x]["Amount"].sum()
-            writer.writerow({'', categories[x], cat_total})
+            cat_totals.append(df_categories[x]["Amount"].sum())
+
+        for x in range(len(categories)):
+            writer.writerow(['', categories[x], cat_totals[x]])
             writer.writerows(df_categories[x].values.tolist())
             writer.writerow({})
 

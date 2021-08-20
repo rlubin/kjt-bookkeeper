@@ -1,7 +1,7 @@
 pyinstaller -w -F -n kjt-bookkeeper main.py
 
 add checking on loaded files
--add notification for files that aren't processed corectly
+-add notification for files that aren't formatted corecttly and subsequently skipped
 
 break into functions with a single responsiblity
 
