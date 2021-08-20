@@ -1,8 +1,9 @@
-# import os
+import os
 import pandas as pd
 import numpy as np
+import datetime
 
-
+# not currently in use
 def isBadFile(file_path):
     '''
     check if incompatible files were uploaded
@@ -236,7 +237,8 @@ def splitIntoCategories(df, file_types):
     return categories, df_categories
 
 
-def processAndSave(file_paths, save_file_path):
+# def processAndSave(file_paths, save_file_path):
+def processAndSave(file_paths):
     '''
     process csv files
     and save to specified location
@@ -310,7 +312,23 @@ def processAndSave(file_paths, save_file_path):
     #     print()
 
     # create and save document
-    with open(save_file_path, mode="w") as f:
+    # with open(save_file_path, mode="w") as f:
+    #     f.write("Revenue: {:.2f}\n".format(revenue))
+    #     f.write("Expenses: {:.2f}\n".format(expenses))
+    #     f.write("Income: {:.2f}\n".format(income))
+    #     for x in range(len(df_categories)):
+    #         amount = df_categories[x]["Amount"].sum()
+    #         f.write("\n" + categories[x] + ": {:.2f}".format(amount) + "\n")
+    #         for index, row in df_categories[x].iterrows():
+    #             f.write(str(row["Date"]) + "\t" + str(row["Description"]
+    #                                                   ) + "\t" + str(row["Amount"]) + "\n")
+
+    date = datetime.date.today().strftime('%Y-%m-%d')
+    file_name = f'kjt-report-{date}.txt'
+    desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+    file_path = os.path.join(desktop, file_name)
+
+    with open(file_path, mode="w") as f:
         f.write("Revenue: {:.2f}\n".format(revenue))
         f.write("Expenses: {:.2f}\n".format(expenses))
         f.write("Income: {:.2f}\n".format(income))

@@ -1,3 +1,7 @@
 pyinstaller -w -F -n kjt-bookkeeper main.py
 
 add checking on loaded files
+-add notification for files that aren't processed corectly
+
+change output file to .csv (https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_csv.html)
+change process option to save file immediately to desktop (kjt-report-yyyy-mm-dd)
