@@ -7,15 +7,5 @@ break into functions with a single responsiblity
 
 remove commented code
 
-make the csv file better laid out
-revenue                               sum(cat)
-expenses                              sum(cat)
-income                                sum(cat)
-
-                  description           sum(x)
-date              description               x
-
-                  description           sum(x)
-date              description               x
-
-can't build the final csv with pandas, need to build it section by section
+BUG
+when building csv, sometimes the cat name and cat total are in reverse order??? WTF???
