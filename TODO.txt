@@ -5,4 +5,10 @@ add checking on loaded files
 
 break into functions with a single responsiblity
 
-remove commented code
+remove commented out code
+
+CHANGE FUNCTIONALITY TO READ PDF INSTEAD OF OF CSV FILES
+
+convert to object oriented design
+
+fix dates on statements
