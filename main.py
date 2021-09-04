@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import filedialog
-import utilities as ut
+from Report import Report
+from Statement import Statement
+from ReportSaver import ReportSaver
 
 
 class App():
@@ -61,13 +63,14 @@ class App():
         '''
         allow user to load csv files
         '''
-        csv_files = filedialog.askopenfiles(
-            initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
+        files = filedialog.askopenfiles(
+            initialdir="/", title="Select files", filetypes=(("PDF Files", "*.pdf"), ))
+            # initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
         # initialdir="C:/Users\Ryan/Google Drive/Software/In Progress/kjt-bookkeeper/kjtbk-files", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
-        for csv_file in csv_files:
+        for file in files:
             # don't allow duplicate file paths
-            if csv_file.name not in self.file_paths:
-                self.file_paths.append(csv_file.name)
+            if file.name not in self.file_paths:
+                self.file_paths.append(file.name)
         # print(self.file_paths)
         # check for bad files and remove them
         # bad_files = []
@@ -124,7 +127,13 @@ class App():
         # initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
         # save_file_path = save_file.name
         # ut.processAndSave(self.file_paths, save_file_path)
-        ut.processAndSave(self.file_paths)
+        # ut.processAndSave(self.file_paths)
+        statements = []
+        for file in self.file_paths:
+            statements.append(Statement(file))
+        rp = Report(statements)
+        rps = ReportSaver(rp)
+        rps.save()
 
     def instructions(self):
         '''

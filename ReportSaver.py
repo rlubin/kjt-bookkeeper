@@ -29,7 +29,7 @@ class ReportSaver:
       ['', 'Expenses', '{:.2f}'.format(totals['expenses'])],
       ['', 'Income', '{:.2f}'.format(totals['income'])]]
 
-  def __saveFile(self, path):
+  def __save(self, path):
     with open(path, 'w', newline='') as f:
         writer = csv.writer(f)
 
@@ -52,25 +52,23 @@ class ReportSaver:
 
   def save(self):
     path = self.__createFilePath()
-    self.__saveFile(path)
+    self.__save(path)
     self.__openFileInExplorer(path)
 
 
 
 # create files list
-dir = os.path.join(os.getcwd(), 'kjtbk-files', 'NBC')
-files = []
-for file_path in os.listdir(dir):
-    files.append(os.path.join(dir, file_path))
+# dir = os.path.join(os.getcwd(), 'kjtbk-files')
+# files = []
+# for file_path in os.listdir(dir):
+#     files.append(os.path.join(dir, file_path))
 
-rp = Report()
-
+# statements = []
 # build Statement objects
-for file in files:
-  st = Statement(file)
-  rp.addStatement(st)
+# for file in files:
+#   statements.append(Statement(file))
 
-rp.buildReport()
+# rp = Report(statements)
 
-rps = ReportSaver(rp)
-rps.save()
+# rps = ReportSaver(rp)
+# rps.save()

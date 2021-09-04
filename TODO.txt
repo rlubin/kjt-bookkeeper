@@ -1,14 +1,5 @@
 pyinstaller -w -F -n kjt-bookkeeper main.py
 
-add checking on loaded files
--add notification for files that aren't formatted corecttly and subsequently skipped
+add notifications for files that aren't processed
 
-break into functions with a single responsiblity
-
-remove commented out code
-
-CHANGE FUNCTIONALITY TO READ PDF INSTEAD OF OF CSV FILES
-
-convert to object oriented design
-
-fix dates on statements
+ADD UNIT TESTING CODE

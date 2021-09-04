@@ -8,9 +8,11 @@ class Report:
     self.categories = None
     self.df_categories = None
     self.totals = None
+    self.__buildReport()
 
-  def addStatement(self, statement):
-    self.statements.append(statement)
+  # def addStatement(self, statement):
+  #   self.statements.append(statement)
+  #   self.__buildReport()
 
   def __mergeStatementDfs(self):
     dfs = []
@@ -83,12 +85,16 @@ class Report:
     sorted_df_categories = []
 
     for i in range(0, len(categories)):
+      # largest + to - then largest + to -
       if self.__containsPositive(category_totals):
         max_value = max(category_totals)
         max_index = category_totals.index(max_value)
       else:
         max_value = min(category_totals)
         max_index = category_totals.index(max_value)
+      # largest value to lowest value + or -
+      # max_value = max(filter(abs(), category_totals))
+      # max_index = category_totals.index(max_value)
       sorted_category_totals.append(category_totals[max_index])
       sorted_categories.append(categories[max_index])
       sorted_df_categories.append(df_categories[max_index])
@@ -103,14 +109,13 @@ class Report:
 
     return sorted_categories, sorted_df_categories
     
-
   def __calculateTotals(self, df):
     revenue = df.loc[df["AMOUNT"] > 0]["AMOUNT"].sum()
     expenses = df.loc[df["AMOUNT"] < 0]["AMOUNT"].sum()
     income = revenue + expenses
     return {'revenue': revenue, 'expenses': expenses, 'income': income}
 
-  def buildReport(self):
+  def __buildReport(self):
     df = self.__mergeStatementDfs()
     categories, df_categories = self.__splitIntoCategories(df)
     self.categories, self.df_categories = self.__sortCategories(categories, df_categories)
