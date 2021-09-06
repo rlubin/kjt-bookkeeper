@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\Ryan\\Desktop\\kjt-bookkeeper'],
+             pathex=['C:\\Users\\Ryan\\Google Drive\\Software\\Usable\\kjt-bookkeeper'],
              binaries=[],
              datas=[],
              hiddenimports=[],
