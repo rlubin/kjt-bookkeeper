@@ -1,20 +1,27 @@
-import pytest
 from Statement import Statement
 from Report import Report
-import os
 import pandas as pd
 
-dir = os.path.join(os.getcwd(), 'kjtbk-files')
-files = [os.path.join(dir, x) for x in os.listdir(dir)]
-s = Statement(files[0])
-s2 = Statement(files[1])
+s = Statement('Test.pdf')
 r = Report([s])
-r2 = Report([s, s2])
 
-def test_properties():
-  assert isinstance(r.statements, Statement)
+def test_statementsProp():
+  assert isinstance(r.statements, list)
+  for statement in r.statements:
+    assert isinstance(statement, Statement)
+
+def test_categoriesProp():
   assert isinstance(r.categories, list)
+  for category in r.categories:
+    assert isinstance(category, str)
+
+def test_df_categoriesProp():
   assert isinstance(r.df_categories, list)
-  assert hasattr(r.totals, 'revenue')
-  assert hasattr(r.totals, 'expenses')
-  assert hasattr(r.totals, 'income')
+  for category in r.df_categories:
+    assert isinstance(category, pd.DataFrame)
+
+def test_totalsProp():
+  keys = r.totals.keys()
+  assert 'revenue' in keys
+  assert 'expenses' in keys
+  assert 'income' in keys

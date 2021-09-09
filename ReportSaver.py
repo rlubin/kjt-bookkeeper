@@ -2,8 +2,8 @@ import os
 import datetime
 import csv
 import subprocess
-from Statement import Statement
-from Report import Report
+# from Statement import Statement
+# from Report import Report
 
 class ReportSaver:
   def __init__(self, report):
@@ -55,20 +55,21 @@ class ReportSaver:
     self.__save(path)
     self.__openFileInExplorer(path)
 
+# dir = os.path.join(os.getcwd())
+# file = os.path.join(dir, 'Test.pdf')
+# stat = Statement(file)
+# rep = Report([stat])
+# rps = ReportSaver(rep)
 
+# date = datetime.date.today().strftime('%Y-%m-%d')
+# ext = 'csv'
+# desktop = os.path.join(os.path.join(os.path.expanduser('~')), 'Desktop')
 
-# create files list
-# dir = os.path.join(os.getcwd(), 'kjtbk-files')
-# files = []
-# for file_path in os.listdir(dir):
-#     files.append(os.path.join(dir, file_path))
-
-# statements = []
-# build Statement objects
-# for file in files:
-#   statements.append(Statement(file))
-
-# rp = Report(statements)
-
-# rps = ReportSaver(rp)
+# before_files = os.listdir(desktop)
 # rps.save()
+# after_files = os.listdir(desktop)
+
+# difference = set(before_files).symmetric_difference(set(after_files))
+# list_difference = list(difference)
+
+# print(list_difference)

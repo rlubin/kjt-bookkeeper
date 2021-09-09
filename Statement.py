@@ -1,5 +1,6 @@
 import tabula
-import os
+# import os
+# import datetime
 
 class Statement():
   def __init__(self, path):
@@ -21,7 +22,9 @@ class Statement():
     return df[df['AMOUNT'] != 0]
 
   def __createDateColumn(self, df):
-    year = os.path.split(self.path)[-1].split('_')[-2][0:4]
+    # year = os.path.split(self.path)[-1].split('_')[-2][0:4] # makes date from file name
+    # year = os.path.getmtime(self.path)
+    year = 2021
     df['DATE'] = df['MM DD'].apply(lambda x: x.split(' ')[1] + '-' + x.split(' ')[0] + f'-{year}')
     return df
 
@@ -37,3 +40,8 @@ class Statement():
     df_ord = self.__orderColumns(df_cols)
     df_final = self.__removeZeroAmountRows(df_ord)
     return df_final
+
+# dir = os.path.join(os.getcwd())
+# file = os.path.join(dir, 'Test.pdf')
+# stat = Statement(file)
+# print(stat.df)
