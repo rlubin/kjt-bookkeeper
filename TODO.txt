@@ -1,5 +1,7 @@
 pyinstaller -w -F -n kjt-bookkeeper main.py
 
-add notifications for files that aren't processed
+add notifications for file(s) that aren't good
 
-ADD UNIT TESTING CODE
+ADD UNIT TESTING
+
+remove commented code

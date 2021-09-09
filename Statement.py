@@ -37,17 +37,3 @@ class Statement():
     df_ord = self.__orderColumns(df_cols)
     df_final = self.__removeZeroAmountRows(df_ord)
     return df_final
-
-
-
-# create files list
-# dir = os.path.join(os.getcwd(), 'kjtbk-files', 'NBC')
-# files = []
-# for file_path in os.listdir(dir):
-#     files.append(os.path.join(dir, file_path))
-
-# build Statement objects
-# for file in files:
-#   st = Statement(file)
-#   print(st.path)
-#   print(st.df)

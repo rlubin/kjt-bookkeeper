@@ -1,18 +1,12 @@
 import pandas as pd
-import os
-from Statement import Statement
 
 class Report:
-  def __init__(self, statements=[]):
+  def __init__(self, statements):
     self.statements = statements
     self.categories = None
     self.df_categories = None
     self.totals = None
     self.__buildReport()
-
-  # def addStatement(self, statement):
-  #   self.statements.append(statement)
-  #   self.__buildReport()
 
   def __mergeStatementDfs(self):
     dfs = []
@@ -48,11 +42,7 @@ class Report:
     categories = filter(self.__isCheque, unique_descriptions)
     categories = list(categories)
     categories.append("CHEQUES")
-    # categories.append("OTHER")
     categories = list(categories)
-
-    # fill NaN's in dataframe with OTHER (should be for description)
-    # df = df.fillna("OTHER")
 
     df_categories = []
     for cat in categories:
@@ -92,20 +82,12 @@ class Report:
       else:
         max_value = min(category_totals)
         max_index = category_totals.index(max_value)
-      # largest value to lowest value + or -
-      # max_value = max(filter(abs(), category_totals))
-      # max_index = category_totals.index(max_value)
       sorted_category_totals.append(category_totals[max_index])
       sorted_categories.append(categories[max_index])
       sorted_df_categories.append(df_categories[max_index])
       del category_totals[max_index]
       del categories[max_index]
       del df_categories[max_index]
-
-    # for i in range(0, len(sorted_category_totals)):
-    #   print(sorted_category_totals[i])
-    #   print(sorted_categories[i])
-    #   print(sorted_df_categories[i])
 
     return sorted_categories, sorted_df_categories
     
@@ -120,29 +102,3 @@ class Report:
     categories, df_categories = self.__splitIntoCategories(df)
     self.categories, self.df_categories = self.__sortCategories(categories, df_categories)
     self.totals = self.__calculateTotals(df)
-    
-
-
-# create files list
-# dir = os.path.join(os.getcwd(), 'kjtbk-files', 'NBC')
-# files = []
-# for file_path in os.listdir(dir):
-#     files.append(os.path.join(dir, file_path))
-
-# rp = Report()
-# rp.addStatement(Statement(files[0]))
-# rp.buildReport()
-
-# build Statement objects
-# for file in files:
-#   st = Statement(file)
-#   rp.addStatement(st)
-
-# for statement in rp.statements:
-#   print(statement)
-
-# rp.buildReport()
-
-# print(rp.categories)
-# print(rp.df_categories)
-# print(rp.totals)
