@@ -1,9 +1,10 @@
 -be able to type the year of the transactions
 -split up GUI into smaller components
 
--reorganize file structure
--add to gitignore
+
+
 
 done:
--added fileChecker and testing code
--update readme
+-reorganize file structure
+--fix test file imports
+-add to gitignore

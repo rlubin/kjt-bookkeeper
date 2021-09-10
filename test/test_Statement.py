@@ -1,11 +1,13 @@
 from Statement import Statement
 import pandas as pd
+import os
 
-s = Statement('Test.pdf')
+file = os.path.join(os.getcwd(), 'test', 'files', 'Test.pdf')
+s = Statement(file)
 df = pd.DataFrame.from_dict({'DATE': ['21-12-2021', '01-02-2021'], 'DESCRIPTION': ['One', 'Two'], 'AMOUNT': [-1234.43, 2.3]}) # associated to Test.pdf
 
 def test_properties():
-  assert s.path == 'Test.pdf'
+  assert s.path == file
   assert isinstance(s.df, pd.DataFrame)
 
 def test_dfColumns():

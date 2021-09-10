@@ -1,8 +1,10 @@
 from Statement import Statement
 from Report import Report
 import pandas as pd
+import os
 
-s = Statement('Test.pdf')
+file = os.path.join(os.getcwd(), 'test', 'files', 'Test.pdf')
+s = Statement(file)
 r = Report([s])
 
 def test_statementsProp():

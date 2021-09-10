@@ -24,19 +24,18 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 
         pip install tabula-py
 
-4.  [Pyinstaller](https://pypi.org/project/pyinstaller/) (If you want to modify the code and rebuild the executable)
+4.  [Pyinstaller](https://pypi.org/project/pyinstaller/)
 
         pip install pyinstaller
 
-    Rebuild executable
+5.  Build executable
 
         pyinstaller -w -F -n kjt-bookkeeper main.py
 
 ## Run
 
-    py main.py
-
-or use executable located at /dist/kjt-bookkeeper.exe
+The executable file located /dist/kjt-bookkeeper.exe
+py main.py
 
 ## Testing
 

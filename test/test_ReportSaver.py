@@ -4,7 +4,8 @@ from ReportSaver import ReportSaver
 import os
 import datetime
 
-s = Statement('Test.pdf')
+file = os.path.join(os.getcwd(), 'test', 'files', 'Test.pdf')
+s = Statement(file)
 r = Report([s])
 rs = ReportSaver(r)
 
