@@ -3,6 +3,7 @@ from tkinter import filedialog
 from Report import Report
 from Statement import Statement
 from ReportSaver import ReportSaver
+from FileChecker import FileChecker
 
 
 class GUI():
@@ -61,25 +62,24 @@ class GUI():
 
     def loadFiles(self):
         '''
-        allow user to load csv files
+        allow user to load pdf files
         '''
         files = filedialog.askopenfiles(
             initialdir="/", title="Select files", filetypes=(("PDF Files", "*.pdf"), ))
-            # initialdir="/", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
-        # initialdir="C:/Users\Ryan/Google Drive/Software/In Progress/kjt-bookkeeper/kjtbk-files", title="Select files", filetypes=(("CSV Files", "*.csv"), ))
         for file in files:
             # don't allow duplicate file paths
             if file.name not in self.file_paths:
                 self.file_paths.append(file.name)
-        # print(self.file_paths)
         # check for bad files and remove them
-        # bad_files = []
-        # for x in range(len(self.file_paths)):
-        #     if ut.isBadFile(self.file_paths[x]):
-        #         bad_files.append(x)
-        # bad_files.reverse()
-        # for x in bad_files:
-        #     del self.file_paths[x]
+        bad_files = []
+        fc = FileChecker()
+        for x in range(len(self.file_paths)):
+            if fc.isGood(self.file_paths[x]) == False:
+                bad_files.append(self.file_paths[x])
+        bad_files.reverse()
+        for bad_file in bad_files:
+            if bad_file in self.file_paths:
+                self.file_paths.remove(bad_file)
         # clear listbox
         self.listbox.delete(0, "end")
         # populate listbox
@@ -90,6 +90,34 @@ class GUI():
         # update button state
         if self.listbox.size() > 0:
             self.proc_button["state"] = tk.NORMAL
+        if len(bad_files) > 0:
+            self.showBadFiles(bad_files)
+
+    def showBadFiles(self, files):
+        '''
+        pop up that shows bad files
+        '''
+        # new toplevel window setup
+        bad_file_window = tk.Toplevel()
+        bad_file_window.title("Bad Files")
+        width = 300
+        init_height = 75
+        height_per_line = 20
+        bad_file_window.geometry(f"{width}x{init_height + (height_per_line*len(files))}")
+        bad_file_window.resizable(0, 0)
+
+        title_label = tk.Label(bad_file_window, text="Bad Files")
+        title_label.pack(side=tk.TOP)
+        for file in files:
+            file_name = file[file.rfind("/")+1:]
+            label = tk.Label(
+            bad_file_window, text=file_name, anchor=tk.W, justify=tk.LEFT)
+            label.pack(expand=True, fill=tk.X)
+
+        button = tk.Button(
+            bad_file_window, text="OK", command=bad_file_window.destroy, width=10)
+        button.pack(side=tk.BOTTOM)
+
 
     def deleteFiles(self):
         '''
@@ -122,12 +150,6 @@ class GUI():
         '''
         process files and save document
         '''
-        # save_file = filedialog.asksaveasfile(
-            # initialdir="/", title="Save file", defaultextension=("Text files", "*.txt"), filetypes=(("Text files", "*.txt"),))
-        # initialdir="/", title="Save file", defaultextension=("CSV files", "*.csv"), filetypes=(("CSV files", "*.csv"),))
-        # save_file_path = save_file.name
-        # ut.processAndSave(self.file_paths, save_file_path)
-        # ut.processAndSave(self.file_paths)
         statements = []
         for file in self.file_paths:
             statements.append(Statement(file))
@@ -142,7 +164,7 @@ class GUI():
         # new toplevel window setup
         insturctions = tk.Toplevel()
         insturctions.title("Instructions")
-        insturctions.geometry("325x200")
+        insturctions.geometry("325x225")
         insturctions.resizable(0, 0)
 
         # label setup
@@ -158,7 +180,7 @@ class GUI():
             insturctions, text="Deselect file(s):\nAllows you to deselect highlighted files", anchor=tk.W, justify=tk.LEFT)
         desel_label.pack(expand=True, fill=tk.X)
         proc_label = tk.Label(
-            insturctions, text="Process file(s):\nProcesses files and choose where to save it", anchor=tk.W, justify=tk.LEFT)
+            insturctions, text="Process file(s):\nAggegrates all the files you have selected and saves it to your\ndesktop under the name kjt-report-DD-MM-YYYY.csv", anchor=tk.W, justify=tk.LEFT)
         proc_label.pack(expand=True, fill=tk.X)
 
     def deselectFiles(self):
