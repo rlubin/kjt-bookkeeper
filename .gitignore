@@ -1,6 +1,6 @@
-/kjtbk-files
-/.vs
+kjtbk-files
+.vs
 __pycache__
-/.pytest_cache
-/dist
-/build
+.pytest_cache
+dist
+build
