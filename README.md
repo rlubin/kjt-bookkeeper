@@ -17,23 +17,24 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 ### Requirements
 
 1.  [Python](https://www.python.org/)
-2.  [Pandas](https://pypi.org/project/pandas/)
+2.  [Java](https://www.java.com/en/download/manual.jsp)
+3.  [Pandas](https://pypi.org/project/pandas/)
 
         pip install pandas
 
-3.  [Tabula](https://pypi.org/project/tabula-py/)
+4.  [Tabula](https://pypi.org/project/tabula-py/)
 
         pip install tabula-py
 
-4.  [Pyinstaller](https://pypi.org/project/pyinstaller/)
+5.  [Pyinstaller](https://pypi.org/project/pyinstaller/)
 
         pip install pyinstaller
 
-5.  Build executable
+6.  Build executable
 
         pyinstaller -w -F -n kjt-bookkeeper main.py
 
-6.  [PyTest](https://pypi.org/project/pytest/)
+7.  [PyTest](https://pypi.org/project/pytest/)
 
         pip install pytest
 
