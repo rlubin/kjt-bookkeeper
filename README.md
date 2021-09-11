@@ -34,8 +34,10 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 
 ## Run
 
-The executable file located /dist/kjt-bookkeeper.exe
-py main.py
+The executable file located at /dist/kjt-bookkeeper.exe <br />
+or
+
+        py main.py
 
 ## Testing
 
