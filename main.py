@@ -1,7 +1,7 @@
-from GUI import GUI
+from src.GUI import GUI
 
 def main():
-  app = GUI()
+  GUI()
 
 if __name__ == '__main__':
   main()

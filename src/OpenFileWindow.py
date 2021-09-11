@@ -1,7 +1,7 @@
-from BadFileWindow import BadFileWindow
+from src.BadFileWindow import BadFileWindow
 import tkinter as tk
 from tkinter import filedialog
-from FileChecker import FileChecker
+from src.FileChecker import FileChecker
 
 class OpenFileWindow():
   def __init__(self, file_paths_org):
@@ -28,7 +28,6 @@ class OpenFileWindow():
               file_paths.remove(bad_file)
       if len(bad_files) > 0:
           self.showBadFiles(bad_files)
-      return file_paths
 
   def showBadFiles(self, files):
     BadFileWindow(files)

@@ -1,4 +1,4 @@
-from MenuWindow import MenuWindow
+from src.MenuWindow import MenuWindow
 
 class GUI():
     def __init__(self):

@@ -1,9 +1,9 @@
-from InstructionsWindow import InstructionsWindow
+from src.InstructionsWindow import InstructionsWindow
 import tkinter as tk
-from Report import Report
-from Statement import Statement
-from ReportSaver import ReportSaver
-from OpenFileWindow import OpenFileWindow
+from src.Report import Report
+from src.Statement import Statement
+from src.ReportSaver import ReportSaver
+from src.OpenFileWindow import OpenFileWindow
 
 class MenuWindow():
 
@@ -61,7 +61,7 @@ class MenuWindow():
 
   def loadFiles(self):
       # update file_paths
-      self.flie_paths = OpenFileWindow(self.file_paths)
+      OpenFileWindow(self.file_paths)
       # clear listbox
       self.listbox.delete(0, "end")
       # populate listbox
