@@ -10,6 +10,7 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 - Pandas
 - Tabula
 - PyInstaller
+- PyTest
 
 ## Setup
 
@@ -31,6 +32,10 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 5.  Build executable
 
         pyinstaller -w -F -n kjt-bookkeeper main.py
+
+6.  [PyTest](https://pypi.org/project/pytest/)
+
+        pip install pytest
 
 ## Run
 
