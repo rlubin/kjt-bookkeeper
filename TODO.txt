@@ -1,10 +1,4 @@
--be able to type the year of the transactions
+-be able to type the year of the transactions automatically
 -split up GUI into smaller components
 
-
-
-
 done:
--reorganize file structure
---fix test file imports
--add to gitignore

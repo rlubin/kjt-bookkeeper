@@ -1,3 +1,7 @@
 from GUI import GUI
 
-app = GUI()
+def main():
+  app = GUI()
+
+if __name__ == '__main__':
+  main()
