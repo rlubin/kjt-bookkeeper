@@ -7,6 +7,7 @@ Basic bookkeeping app that processes National Bank of Canada business and credit
 ## Technologies
 
 - Python
+- Java
 - Pandas
 - Tabula
 - PyInstaller
