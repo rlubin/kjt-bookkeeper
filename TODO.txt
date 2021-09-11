@@ -1,4 +1,4 @@
 -be able to type the year of the transactions automatically
--split up GUI into smaller components
+-make all window pop up directly ontop of the menu window
 
 done:
