@@ -4,7 +4,7 @@ from tkinter import filedialog
 from src.FileChecker import FileChecker
 
 class OpenFileWindow():
-  def __init__(self, file_paths_org, x, y):
+  def __init__(self, file_paths_org, x = None, y = None):
       '''
       allow user to load pdf files
       alter file_paths

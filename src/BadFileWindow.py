@@ -1,7 +1,7 @@
 import tkinter as tk
 
 class BadFileWindow():
-  def __init__(self, files, x ,y):
+  def __init__(self, files, x = None ,y = None):
       '''
       pop up that shows bad files
       '''
@@ -11,7 +11,10 @@ class BadFileWindow():
       width = 300
       init_height = 75
       height_per_line = 20
-      bad_file_window.geometry(f"{width}x{init_height + (height_per_line*len(files))}+{int(x)+10}+{int(y)+10}")
+      if (x == None and y == None):
+          bad_file_window.geometry(f"{width}x{init_height + (height_per_line*len(files))}")
+      else:
+        bad_file_window.geometry(f"{width}x{init_height + (height_per_line*len(files))}+{int(x)+10}+{int(y)+10}")
       bad_file_window.resizable(0, 0)
 
       title_label = tk.Label(bad_file_window, text="Bad Files")
