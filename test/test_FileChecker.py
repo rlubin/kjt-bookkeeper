@@ -1,4 +1,4 @@
-from FileChecker import FileChecker
+from src.FileChecker import FileChecker
 import os
 
 fc = FileChecker()

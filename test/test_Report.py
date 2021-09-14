@@ -1,5 +1,5 @@
-from Statement import Statement
-from Report import Report
+from src.Statement import Statement
+from src.Report import Report
 import pandas as pd
 import os
 
