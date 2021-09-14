@@ -1,4 +1,3 @@
--be able to type the year of the transactions automatically
--find better method to pass coords
-
-done:
+-be able to let the user enter the year of statements
+-find better method to pass main window coordinates
+-give filechecker better checks, check if table has correct columns and types
