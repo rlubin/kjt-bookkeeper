@@ -4,11 +4,13 @@ from tkinter import filedialog
 from src.FileChecker import FileChecker
 
 class OpenFileWindow():
-  def __init__(self, file_paths_org):
+  def __init__(self, file_paths_org, x, y):
       '''
       allow user to load pdf files
       alter file_paths
       '''
+      self.x = x
+      self.y = y
       file_paths = file_paths_org
       files = filedialog.askopenfiles(
           initialdir="/", title="Select files", filetypes=(("PDF Files", "*.pdf"), ))
@@ -30,4 +32,4 @@ class OpenFileWindow():
           self.showBadFiles(bad_files)
 
   def showBadFiles(self, files):
-    BadFileWindow(files)
+    BadFileWindow(files, self.x, self.y)

@@ -60,8 +60,9 @@ class MenuWindow():
     self.root.mainloop()
 
   def loadFiles(self):
+      coords = self.__rootCornerCords()
       # update file_paths
-      OpenFileWindow(self.file_paths)
+      OpenFileWindow(self.file_paths, coords['x'], coords['y'])
       # clear listbox
       self.listbox.delete(0, "end")
       # populate listbox
@@ -112,7 +113,12 @@ class MenuWindow():
       rps.save()
 
   def instructions(self):
-      InstructionsWindow()
+      coords = self.__rootCornerCords()
+      InstructionsWindow(coords['x'], coords['y'])
+
+  def __rootCornerCords(self):
+      coords = self.root.winfo_geometry().split('+')
+      return {'x': coords[1], 'y': coords[2]}
 
   def deselectFiles(self):
       '''

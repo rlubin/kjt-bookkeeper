@@ -1,14 +1,14 @@
 import tkinter as tk
 
 class InstructionsWindow():
-  def __init__(self):
+  def __init__(self, x, y):
     '''
     explain how to use the app
     '''
     # new toplevel window setup
     insturctions = tk.Toplevel()
     insturctions.title("Instructions")
-    insturctions.geometry("325x225")
+    insturctions.geometry(f'325x225+{int(x)+10}+{int(y)+10}')
     insturctions.resizable(0, 0)
 
     # label setup
